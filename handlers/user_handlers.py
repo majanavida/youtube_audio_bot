@@ -5,7 +5,6 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
 from aiogram.types import Message, FSInputFile
 from pytube import YouTube
-from services.download import download_audio
 from states.states import DownloadState
 
 
