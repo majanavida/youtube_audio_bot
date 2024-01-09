@@ -11,4 +11,4 @@ router = Router()
 
 @router.message(StateFilter(default_state))
 async def process_wrong_answer(message: Message, state: FSMContext):
-    await message.answer('I don\'t understeand you')
+    await message.answer('If you want to download audio - use /audio')
