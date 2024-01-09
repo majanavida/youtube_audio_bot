@@ -61,6 +61,6 @@ async def download_audio(url, message):
                                     path=f'{message.chat.id}/{yt.title}.mp3'),
                                     caption='Here is your audio')
     except FileNotFoundError:
-        await message.answer('Something went wrong... Try again or download '
-                             'other audio')
+        await message.answer('Something went wrong... Try again or send '
+                             'another url')
     shutil.rmtree(f'{message.chat.id}')
