@@ -1,11 +1,11 @@
-import shutil
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message
 from pytube import YouTube
 from states.states import DownloadState
+from services.services import download_audio, download_video
 
 
 router = Router()
@@ -50,16 +50,12 @@ async def process_audio_send(message: Message, state: FSMContext):
     await state.clear()
     
     
-async def download_audio(url, message):
-    try:
-        yt = YouTube(url)
-        stream = yt.streams.filter(only_audio=True).first()
-        audio = stream.download(f'{message.chat.id}', f'{yt.title}.mp3')
-        with open(f'{message.chat.id}/{yt.title}.mp3', 'rb') as audio:
-            await message.answer_audio(FSInputFile(
-                                    path=f'{message.chat.id}/{yt.title}.mp3'),
-                                    caption='Here is your audio')
-    except FileNotFoundError:
-        await message.answer('Something went wrong... Try again or send '
-                             'another url')
-    shutil.rmtree(f'{message.chat.id}')
+@router.message(StateFilter(DownloadState.download),
+                F.text.startswith == ('https://youtu.be/' or 
+                                      'https://www.youtube.com/'))
+async def process_video_send(message: Message, state: FSMContext):
+    url = message.text
+    yt = YouTube(url)
+    await message.answer(f'Start downloading {yt.title} video')
+    await download_video(url=url, message=message)
+    await state.clear()

@@ -9,5 +9,5 @@ async def set_main_menu(bot: Bot):
         BotCommand(command='audio', 
                    description='Download audio from YouTube video'),
         BotCommand(command='cancel', 
-                   description='Cancel audio download (after using /audio)')]
+                   description='Cancel download')]
     await bot.set_my_commands(main_menu_commands)
