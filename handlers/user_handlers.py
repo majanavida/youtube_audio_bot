@@ -5,7 +5,7 @@ from aiogram.fsm.state import default_state
 from aiogram.types import Message
 from pytube import YouTube
 from states.states import DownloadState
-from services.services import download_audio, download_video
+from services.services import download_audio
 
 
 router = Router()
@@ -47,15 +47,4 @@ async def process_audio_send(message: Message, state: FSMContext):
     yt = YouTube(url)
     await message.answer(f'Start downloading {yt.title}')
     await download_audio(url=url, message=message)
-    await state.clear()
-    
-    
-@router.message(StateFilter(DownloadState.download),
-                F.text.startswith == ('https://youtu.be/' or 
-                                      'https://www.youtube.com/'))
-async def process_video_send(message: Message, state: FSMContext):
-    url = message.text
-    yt = YouTube(url)
-    await message.answer(f'Start downloading {yt.title} video')
-    await download_video(url=url, message=message)
     await state.clear()
